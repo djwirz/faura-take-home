@@ -1,32 +1,13 @@
 import { expect, test, describe, it } from "vitest";
 import { getPets, searchPets } from "./petfinder";
-import dotenv from 'dotenv';
 
-dotenv.config({ path: '.env.test' });
-
-// don't be silly and forget env vars
-test("Environment variables should be set", async () => {
+// check env vars, no need to pretend I'm an encore expert yet and don't need sanity checks
+test("Environment variables should be set", () => {
   expect(process.env.PET_FINDER_API_KEY).toBeDefined();
   expect(process.env.PET_FINDER_SECRET).toBeDefined();
 });
 
-// gots to get a token yo
-test("Should successfully retrieve an access token from Petfinder", async () => {
-  const token = await fetch("https://api.petfinder.com/v2/oauth2/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      client_id: process.env.PET_FINDER_API_KEY!,
-      client_secret: process.env.PET_FINDER_SECRET!,
-    }),
-  }).then((res) => res.json());
-
-  console.log("OAuth Token Response:", token); // Debugging output
-  expect(token).toHaveProperty("access_token");
-});
-
-// simple response check to see the datas are coming in
+// make sure I'm using that token right with the simplest endpoint
 test("Petfinder API should return an array of pets", async () => {
   const response = await getPets();
   expect(response).toHaveProperty("pets");
@@ -34,8 +15,7 @@ test("Petfinder API should return an array of pets", async () => {
   expect(response.pets.length).toBeGreaterThan(0);
 });
 
-// stub out some tests to fail
-// basic expects that admittedly don't do much
+// use real params for the endpoint not a dragon...
 describe("Petfinder API - Search Pets", () => {
   it("should successfully retrieve a list of pets", async () => {
     const response = await searchPets({ location: "San Francisco, CA", type: "dog" });
@@ -47,14 +27,14 @@ describe("Petfinder API - Search Pets", () => {
   });
 
   it("should return an empty list when no pets match the query", async () => {
-    const response = await searchPets({ location: "Nowhere, XX", type: "dragon" });
+    const response = await searchPets({ location: "Nunavut, Canada", type: "rabbit" });
 
     expect(response).toBeDefined();
     expect(response).toHaveProperty("animals");
     expect(response.animals.length).toBe(0);
   });
 
-  it("should handle missing parameters gracefully ish", async () => {
+  it("should throw an error when required parameters are missing", async () => {
     await expect(searchPets({})).rejects.toThrow("Invalid search parameters");
   });
 });

@@ -15,8 +15,8 @@ This project is built using [Encore](https://encore.dev/) and integrates with th
 Clone the repository and install dependencies:
 
 ```
-git clone <repo-url>
-cd encore-hello-world
+git clone https://github.com/encoredev/encore-petfinder-api.git
+cd encore-petfinder-api
 npm install
 ```
 
@@ -41,10 +41,10 @@ The API should now be available at `http://localhost:4000`.
 
 ### Running Tests
 
-Run tests using Vitest:
+Run tests using Vitest via Encore:
 
 ```
-npm test
+encore test
 ```
 
 ## API Endpoints

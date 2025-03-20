@@ -35,3 +35,12 @@ export const getPets = api(
     return { pets: data.animals || [] };
   }
 );
+
+export async function searchPets(params: { location?: string; type?: string }) {
+  if (!params.location || !params.type) {
+    throw new Error("Invalid search parameters");
+  }
+
+  // fake a response for testing
+  return { animals: [] };
+}

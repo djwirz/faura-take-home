@@ -8,6 +8,7 @@ interface PetResponse {
 export const getPets = api(
   { method: "GET", path: "/pets", expose: true },
   async (): Promise<PetResponse> => {
-    return { pets: [] };
+    // valid fake response
+    return { pets: [{ id: 1, name: "Stub Pet" }] };
   }
 );
